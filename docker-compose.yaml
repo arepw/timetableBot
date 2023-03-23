@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:7.0.10-alpine
+    restart: always
+
+  selenium:
+    image: selenium/standalone-chrome
+    restart: always
+    shm_size: 2g
+
+  bot:
+    build: .
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - redis
+      - selenium

@@ -1,0 +1,6 @@
+.dockerignore
+.idea
+db.sqlite
+celerybeat-schedule
+schedule.png
+bcp
