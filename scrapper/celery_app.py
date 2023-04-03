@@ -1,4 +1,8 @@
+import os
 from celery import Celery
+from dotenv import load_dotenv
+
+load_dotenv()
 
 celery = Celery('scrapper.tasks', include=['scrapper.tasks'])
 celery.config_from_object('scrapper.celery_config')
@@ -8,7 +12,7 @@ celery.config_from_object('scrapper.celery_config')
 celery.conf.beat_schedule = {
     'get-screenshot-periodically': {
         'task': 'tasks.get_schedule',
-        'schedule': 1800.0,
+        'schedule': float(os.getenv('UPDATE_RATE')),
     },
 }
 
