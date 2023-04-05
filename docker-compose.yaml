@@ -6,7 +6,7 @@ services:
     restart: always
 
   selenium:
-    image: selenium/standalone-chrome
+    image: selenium/standalone-chrome:111.0
     restart: always
     shm_size: 2g
 
