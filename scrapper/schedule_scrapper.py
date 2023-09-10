@@ -17,7 +17,17 @@ chrome_options.add_argument('--window-size=1920,1200')
 url = 'https://cabinet.vvsu.ru'
 
 
-def get_schedule_current():
+def screenshot_tt(driver: webdriver.Remote, is_next: bool = False) -> None:
+    """ Screenshot table element containing schedule """
+    timetable = driver.find_element(
+        By.CSS_SELECTOR, f'.jcarousel-item-{(lambda: 2 if is_next else 1)()}'
+    )
+    timetable.screenshot(
+        f"{os.getcwd()}/schedule{(lambda: '-next' if is_next else '')()}.png"
+    )
+
+
+def get_schedule_screenshots():
     print('Scrapper started.')
     # Connect to the Selenium Standalone
     driver = webdriver.Remote(
@@ -48,8 +58,16 @@ def get_schedule_current():
     html_main.send_keys(Keys.PAGE_DOWN)
     time.sleep(1)
     # Make a screenshot
-    timetable = driver.find_element(By.TAG_NAME, 'table')
-    timetable.screenshot(f'{os.getcwd()}/schedule.png')
+    screenshot_tt(driver)
+    # Next week schedule
+    carousel_next = driver.find_element(
+        By.CSS_SELECTOR, '.jcarousel-next-horizontal'
+    )
+    if 'disabled' not in carousel_next.get_attribute('class'):
+        carousel_next.click()
+        time.sleep(1)
+        screenshot_tt(driver, is_next=True)
+
     # I don't know if it is necessary to clean all the cookies, but anyway :-)
     driver.delete_all_cookies()
     driver.close()

@@ -1,7 +1,7 @@
 import os
 import datetime
 import telebot
-from scrapper.schedule_scrapper import get_schedule_current
+from scrapper.schedule_scrapper import get_schedule_screenshots
 from redis import Redis
 
 bot = telebot.TeleBot(os.getenv('TG_TOKEN'))
@@ -62,7 +62,7 @@ def get_schedule_on_startup():
     """ If there is no schedule.png on bot startup it will run the scrapper. """
     if not os.path.exists(fr'{os.getcwd()}/schedule.png'):
         print('No schedule.png detected in cwd.\nStarting scrapper, usually it takes ~20 seconds.')
-        get_schedule_current()
+        get_schedule_screenshots()
         print('Success!')
 
 
