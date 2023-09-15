@@ -18,6 +18,7 @@ chrome_options.add_argument('--window-size=1400,1400')
 
 url = 'https://cabinet.vvsu.ru'
 
+
 def validate_week(driver: webdriver.Remote) -> None:
     """Validate current week"""
     week_element = driver.find_element(
