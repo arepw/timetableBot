@@ -1,5 +1,6 @@
 # Use slim-buster variant of the Python image to reduce the size of the final image
 FROM python:3.10-slim-buster
+ENV TZ="Asia/Vladivostok"
 
 # Set working directory
 WORKDIR /app
