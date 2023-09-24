@@ -1,7 +1,7 @@
 import os
 import time
 import re
-from datetime import date
+from datetime import date, datetime
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -22,19 +22,21 @@ url = 'https://cabinet.vvsu.ru'
 def validate_week(driver: webdriver.Remote) -> None:
     """Validate current week"""
     week_element = driver.find_element(
-        By.XPATH, '//td[@class="text-left bg-white"] //b'
-    ).text
-    remote_week = re.search(r'\d+', week_element)
-    current_date = date.today()
+        By.XPATH, '//div[@class="carousel-item active"] //td[@class="text-left bg-white"] //b'
+    )
+    date_parced = re.search(r'([0-9]+(\.[0-9]+)+)', week_element.text)
+    if date_parced is None:
+        raise Exception('No data parced')
+    date_object = datetime.strptime(date_parced.group(0), '%d.%m.%Y').isocalendar()[1]
+    current_week = date.today().isocalendar()[1]
     carousel_next = driver.find_element(
             By.CSS_SELECTOR, '.carousel-control-next'
         )
-    while True:
-        if abs(int(current_date.strftime('%d'))-int(remote_week.group(0))) <= 7\
-        or abs(int(current_date.strftime('%d'))-int(remote_week.group(0))) == 0:
-            return None
-        carousel_next.click()
-        time.sleep(1)
+    if date_object == current_week:
+        return None
+    carousel_next.click()
+    time.sleep(2)
+    validate_week(driver)
 
 
 def screenshot_tt(driver: webdriver.Remote, is_next: bool = False) -> None:
